@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useEffect} from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { authCheckState } from "./store/actions/user";
 
-function App() {
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import Layout from "./layouts/layout";
+import Auth from "./layouts/Auth";
+const App = () =>{
+  const dispatch = useDispatch()
+  const isAuth = useSelector(state => state.user.token) ? 1 : 0
+
+  useEffect(() => { 
+    dispatch(authCheckState())
+
+  }, [dispatch])
+
+  let routes  = (
+    <Switch>
+        <Route  path="/:auth" exact component={Auth} />
+        <Route  path="/dashboard" component={Layout} />
+        <Redirect to="/login" />
+    </Switch>)
+    if(isAuth === 1){
+      routes  = (
+        <Switch>
+            <Route  path="/dashboard" component={Layout} />
+            <Redirect to="/dashboard" />
+        </Switch>)
+    }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+       {routes}
+    </BrowserRouter>
   );
 }
 

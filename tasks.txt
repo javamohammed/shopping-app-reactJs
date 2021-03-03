@@ -1,0 +1,3 @@
+-user_type manipulation
+-configure redux 
+-connect user to db through nodejs apis
